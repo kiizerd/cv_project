@@ -12,7 +12,7 @@ class PracticalExperience extends React.Component {
   }
 
   info(index) {
-    const { editSection } = this.props;
+    const { editSection, removeSubSection } = this.props;
     const { companyName, positionTitle, startDate, endDate } = this.sectionData(index);
 
     return (
@@ -23,10 +23,18 @@ class PracticalExperience extends React.Component {
         <p id={`end-date-${index}`}>{endDate}</p>
 
         <button
-          onClick={(e) => { editSection(e, 'practical', index) }}
+          onClick={(e) => { editSection('practical', index) }}
         >
           Edit section
         </button>
+
+        <button
+          onClick={(e) => { removeSubSection('practical', index) }}
+        >
+          Remove section
+        </button>
+
+        <hr className="subsection-divider" />
       </div>
     );
   }
@@ -83,7 +91,8 @@ class PracticalExperience extends React.Component {
   };
 
   render() {
-    const { sectionSet, addSubSection } = this.props;
+    const { sectionSet, addSubSection, resetSection } = this.props;
+    const inputNames = ['company-name', 'position-title', 'start-date', 'end-date'];
 
     return (
       <section className="practical-section">
@@ -93,9 +102,15 @@ class PracticalExperience extends React.Component {
           })
         }
         <button
-          onClick={ (e) => { addSubSection(e, 'practical') } }
+          onClick={ (e) => { addSubSection('practical') } }
         >
           Add experience
+        </button>
+
+        <button
+          onClick={ (e) => { resetSection('practical', inputNames) } }
+        >
+          Reset section
         </button>
       </section>
     );

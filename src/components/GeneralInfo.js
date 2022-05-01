@@ -1,7 +1,7 @@
 import React from 'react';
 
 class GeneralInfo extends React.Component {
-  info() {
+  sectionData() {
     const data = this.props.sectionData;
     const firstName = data['first-name'];
     const lastName = data['last-name'];
@@ -9,7 +9,13 @@ class GeneralInfo extends React.Component {
     const email = data['email'];
     const url = data['url'];
     const address = data['address']
+
+    return { firstName, lastName, phone, email, url, address };
+  }
+
+  info() {
     const { editSection } = this.props;
+    const { firstName, lastName, phone, email, url, address} = this.sectionData();
 
     return (
       <>
@@ -20,13 +26,14 @@ class GeneralInfo extends React.Component {
         <p id="url">{url}</p>
         <p id="address">{address}</p>
 
-        <button onClick={(e) => { editSection(e, 'personal') }} >Edit section</button>
+        <button onClick={(e) => { editSection('personal') }} >Edit section</button>
       </>
     );
   }
 
   form() {
     const { handleChange, handleSubmit } = this.props;
+    const { firstName, lastName, phone, email, url, address} = this.sectionData();
 
     return (
       <form onSubmit={ (e) => { handleSubmit(e, 'personal') }} className="GeneralInfo">
@@ -36,6 +43,7 @@ class GeneralInfo extends React.Component {
           name="first-name"
           type="text"
           id="first-name"
+          value={firstName ? firstName : ''}
         />
 
         <label htmlFor="last-name">Last name</label>
@@ -44,6 +52,7 @@ class GeneralInfo extends React.Component {
           name="last-name"
           type="text"
           id="last-name"
+          value={lastName ? lastName : ''}
         />
 
         <label htmlFor="phone">Phone</label>
@@ -52,6 +61,7 @@ class GeneralInfo extends React.Component {
           name="phone"
           type="text"
           id="phone"
+          value={phone ? phone : ''}
         />
 
         <label htmlFor="email">Email</label>
@@ -60,6 +70,7 @@ class GeneralInfo extends React.Component {
           name="email"
           type="email"
           id="email"
+          value={email ? email : email}
         />
 
         <label htmlFor="url">URL</label>
@@ -68,6 +79,7 @@ class GeneralInfo extends React.Component {
           name="url"
           type="text"
           id="url"
+          value={url ? url : ''}
         />
 
         <label htmlFor="address">Address</label>
@@ -76,6 +88,7 @@ class GeneralInfo extends React.Component {
           name="address"
           type="text"
           id="address"
+          value={address ? address : ''}
         />
 
         <button>Submit section</button>
@@ -84,12 +97,14 @@ class GeneralInfo extends React.Component {
   };
 
   render() {
-    const { sectionSet } = this.props;
+    const { sectionSet, resetSection } = this.props;
+    const inputNames = ['first-name', 'last-name', 'email', 'phone', 'url', 'address'];
 
     return (
       <section>
         <h3>Personal Details</h3>
         { sectionSet ? this.info() : this.form() }
+        <button onClick={ (e) => { resetSection('personal', inputNames) } }>Reset section</button>
       </section>
     );
   }

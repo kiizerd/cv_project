@@ -17,9 +17,12 @@ class App extends React.Component {
     };
 
     this.addSubSection = this.addSubSection.bind(this);
+    this.removeSubSection = this.removeSubSection.bind(this);
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmitSection = this.handleSubmitSection.bind(this);
     this.handleEditSection = this.handleEditSection.bind(this);
+    this.handleSectionReset = this.handleSectionReset.bind(this);
+    this.handleFullReset = this.handleFullReset.bind(this);
   };
 
   handleInputChange(event) {
@@ -43,7 +46,7 @@ class App extends React.Component {
     this.setState({ updatedSections });
   }
 
-  handleEditSection(event, sectionKey, index) {
+  handleEditSection(sectionKey, index) {
     const { sections } = this.state;
     let updatedSections = null;
     if (sectionKey === 'personal') {
@@ -56,11 +59,67 @@ class App extends React.Component {
     this.setState({ updatedSections });
   }
   
-  addSubSection(e, sectionKey) {
+  addSubSection(sectionKey) {
     const { sections } = this.state;
     const section = [...sections[sectionKey], false];
     this.setState({
       sections: Object.assign(sections, { [sectionKey]: section })
+    });
+  };
+
+  removeSubSection(sectionKey, index) {
+    const { sections } = this.state;
+    const section = sections[sectionKey].slice();
+    const updatedSection = section.slice(0, index).concat(section.slice(index + 1))
+    if (updatedSection.length <= 0) {
+      this.setState({
+        sections: Object.assign(sections, { [sectionKey]: [false] })
+      });
+    } else {
+      this.setState({
+        sections: Object.assign(sections, { [sectionKey]: updatedSection })
+      });
+    }
+  };
+
+  handleFullReset() {
+    const confirmation = window.confirm('This will reset every section and erase ALL progress. Confirm?')
+    if (!confirmation) return;
+    this.setState({
+      data: {},
+      sections: {
+        personal: false,
+        education: [false],
+        practical: [false],
+      },
+    });
+  }
+
+  handleSectionReset(sectionKey, inputNames) {
+    const confirmation = window.confirm(`This will reset all data in the ${sectionKey} section. Confirm?`)
+    if (!confirmation) return;
+    const updatedData = {};
+    const updatedSections = {};
+    if (sectionKey === 'personal') {      
+      updatedSections[sectionKey] = false;
+      // Set data[name] to undefined instead of empty string.
+      // empty string was causing a react error
+      inputNames.forEach(name => updatedData[name] = undefined);
+    } else {
+      updatedSections[sectionKey] = [false];
+      // Using a map instead of for each
+      // For some reason inputNames.forEach is undefined??
+      inputNames.map((name) => {
+        const count = this.state.sections[sectionKey].length;
+        [...Array(count)].forEach((_, subIndex) => {
+          updatedData[`${name}-${subIndex}`] = '';
+        })
+        return ''
+      }).flat()
+    }
+    this.setState({
+      section: Object.assign(this.state.sections, updatedSections),
+      data: Object.assign(this.state.data, updatedData)
     });
   };
 
@@ -73,15 +132,18 @@ class App extends React.Component {
           handleChange={this.handleInputChange}
           handleSubmit={this.handleSubmitSection}
           editSection={this.handleEditSection}
+          resetSection={this.handleSectionReset}
           sectionData={data}
         />
         <hr />
         <EducationExperience
           sectionSet={sections.education}
           addSubSection={this.addSubSection}
+          removeSubSection={this.removeSubSection}
           handleChange={this.handleInputChange}
           handleSubmit={this.handleSubmitSection}
           editSection={this.handleEditSection}
+          resetSection={this.handleSectionReset}
           sectionData={data}
         />
         <hr />
@@ -91,8 +153,11 @@ class App extends React.Component {
           handleChange={this.handleInputChange}
           handleSubmit={this.handleSubmitSection}
           editSection={this.handleEditSection}
+          resetSection={this.handleSectionReset}
           sectionData={data}
         />
+
+        <button onClick={this.handleFullReset}>Reset all</button>
       </main>
     );
   }

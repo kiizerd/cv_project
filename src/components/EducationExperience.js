@@ -11,7 +11,7 @@ class EducationExperience extends React.Component {
   }
 
   info = (index) => {
-    const { editSection } = this.props;
+    const { editSection, removeSubSection } = this.props;
     const { schoolName, titleOfStudy, dateOfStudy } = this.sectionData(index);
 
     return (
@@ -21,10 +21,18 @@ class EducationExperience extends React.Component {
         <p id={`date-of-study-${index}`}>{dateOfStudy}</p>
 
         <button
-          onClick={(e) => { editSection(e, 'education', index) }}
+          onClick={(e) => { editSection('education', index) }}
         >
           Edit section
         </button>
+
+        <button
+          onClick={(e) => { removeSubSection('education', index) }}
+        >
+          Remove section
+        </button>
+
+        <hr className="subsection-divider" />
       </div>
     );
   }
@@ -72,7 +80,8 @@ class EducationExperience extends React.Component {
   };
 
   render() {
-    const { sectionSet, addSubSection } = this.props;
+    const { sectionSet, addSubSection, resetSection } = this.props;
+    const inputNames = ['school-name', 'title-of-study', 'date-of-study'];
 
     return (
       <section className="education-section">
@@ -82,9 +91,15 @@ class EducationExperience extends React.Component {
           })
         }
         <button
-          onClick={(e) => { addSubSection(e, 'education') } }
+          onClick={(e) => { addSubSection('education') } }
         >
           Add education
+        </button>
+
+        <button
+          onClick={ (e) => { resetSection('education', inputNames) } }
+        >
+          Reset section
         </button>
       </section>
     );
