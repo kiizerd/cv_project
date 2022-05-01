@@ -1,4 +1,6 @@
 import React from 'react';
+import { Button, Typography, TextField } from '@mui/material';
+import { Check, Close, Edit, Add, RestartAlt } from '@mui/icons-material';
 
 class EducationExperience extends React.Component {
   sectionData(index) {
@@ -16,21 +18,31 @@ class EducationExperience extends React.Component {
 
     return (
       <div key={`education-section-${index}`}>
-        <p id={`school-name-${index}`}>{schoolName}</p>
-        <p id={`title-of-study-${index}`}>{titleOfStudy}</p>
-        <p id={`date-of-study-${index}`}>{dateOfStudy}</p>
+        <Typography variant="body1" id={`school-name-${index}`}>
+          {schoolName}
+        </Typography>
+        <Typography variant="body1" id={`title-of-study-${index}`}>
+          {titleOfStudy}
+        </Typography>
+        <Typography variant="body1" id={`date-of-study-${index}`}>
+          {dateOfStudy}
+        </Typography>
 
-        <button
+        <Button
+          variant="contained"
+          endIcon={<Edit />}
           onClick={(e) => { editSection('education', index) }}
         >
           Edit section
-        </button>
+        </Button>
 
-        <button
+        <Button
+          variant="contained"
+          endIcon={<Close />}
           onClick={(e) => { removeSubSection('education', index) }}
         >
           Remove section
-        </button>
+        </Button>
 
         <hr className="subsection-divider" />
       </div>
@@ -47,34 +59,36 @@ class EducationExperience extends React.Component {
         key={`education-section-${index}`}
         className="EducationExperience"
       >
-        <label htmlFor={`school-name-${index}`}>School Name</label>
-        <input
-          onChange={handleChange}
-          type="text"
-          name={`school-name-${index}`}
+        <TextField
           id={`school-name-${index}`}
+          label="School name"
+          variant="outlined"
+          name={`school-name-${index}`}
+          onChange={handleChange}
           value={schoolName ? schoolName: ''}
         />
-
-        <label htmlFor={`title-of-study-${index}`}>Title of study</label>
-        <input
-          onChange={handleChange}
-          type="text"
-          name={`title-of-study-${index}`}
+        
+        <TextField
           id={`title-of-study-${index}`}
+          label="Title of study"
+          variant="outlined"
+          name={`title-of-study-${index}`}
+          onChange={handleChange}
           value={titleOfStudy ? titleOfStudy : ''}
         />
-
-        <label htmlFor={`date-of-study-${index}`}>Date of study</label>
-        <input
-          onChange={handleChange}
-          type="text"
-          name={`date-of-study-${index}`}
+        
+        <TextField
           id={`date-of-study-${index}`}
+          label="Date of study"
+          variant="outlined"
+          name={`date-of-study-${index}`}
+          onChange={handleChange}
           value={dateOfStudy ? dateOfStudy : ''}
         />
 
-        <button type="submit">Submit section</button>
+        <Button type="submit" variant="contained" endIcon={<Check />}>
+          Submit section
+        </Button>
       </form>
     );
   };
@@ -85,22 +99,25 @@ class EducationExperience extends React.Component {
 
     return (
       <section className="education-section">
-        <h3>Education</h3>
+      <Typography variant="h5">Education</Typography>
         { sectionSet.map((_, index) => {
             return sectionSet[index] ? this.info(index) : this.form(index);
           })
         }
-        <button
+        <Button
+          variant="contained"
+          endIcon={<Add />}
           onClick={(e) => { addSubSection('education') } }
         >
           Add education
-        </button>
-
-        <button
+        </Button>
+        <Button
           onClick={ (e) => { resetSection('education', inputNames) } }
+          variant="contained"
+          endIcon={<RestartAlt />}
         >
           Reset section
-        </button>
+        </Button>
       </section>
     );
   }

@@ -1,4 +1,6 @@
 import React from 'react';
+import { Button, Typography, TextField } from '@mui/material';
+import { Check, Edit, RestartAlt } from '@mui/icons-material';
 
 class GeneralInfo extends React.Component {
   sectionData() {
@@ -19,14 +21,20 @@ class GeneralInfo extends React.Component {
 
     return (
       <>
-        <p id='first-name'>{firstName}</p>
-        <p id='last-name'>{lastName}</p>
-        <p id="phone">{phone}</p>
-        <p id="email">{email}</p>
-        <p id="url">{url}</p>
-        <p id="address">{address}</p>
+        <Typography variant="body1" id='first-name'>{firstName}</Typography>
+        <Typography variant="body1" id='last-name'>{lastName}</Typography>
+        <Typography variant="body1" id="phone">{phone}</Typography>
+        <Typography variant="body1" id="email">{email}</Typography>
+        <Typography variant="body1" id="url">{url}</Typography>
+        <Typography variant="body1" id="address">{address}</Typography>
 
-        <button onClick={(e) => { editSection('personal') }} >Edit section</button>
+        <Button
+          variant="contained"
+          endIcon={<Edit />}
+          onClick={ (e) => { editSection('personal') } }
+        >
+          Edit section
+        </Button>
       </>
     );
   }
@@ -37,61 +45,63 @@ class GeneralInfo extends React.Component {
 
     return (
       <form onSubmit={ (e) => { handleSubmit(e, 'personal') }} className="GeneralInfo">
-        <label htmlFor="first-name">First name</label>
-        <input
-          onChange={handleChange}
-          name="first-name"
-          type="text"
+        <TextField
           id="first-name"
+          label="First name"
+          variant="outlined"
+          name="first-name"
+          onChange={handleChange}
           value={firstName ? firstName : ''}
         />
 
-        <label htmlFor="last-name">Last name</label>
-        <input
-          onChange={handleChange}
-          name="last-name"
-          type="text"
+        <TextField
           id="last-name"
+          label="Last name"
+          variant="outlined"
+          name="last-name"
+          onChange={handleChange}
           value={lastName ? lastName : ''}
         />
-
-        <label htmlFor="phone">Phone</label>
-        <input
-          onChange={handleChange}
-          name="phone"
-          type="text"
+        
+        <TextField
           id="phone"
+          label="Phone number"
+          variant="outlined"
+          name="phone"
+          onChange={handleChange}
           value={phone ? phone : ''}
         />
-
-        <label htmlFor="email">Email</label>
-        <input
-          onChange={handleChange}
-          name="email"
-          type="email"
+        
+        <TextField
           id="email"
+          label="Email address"
+          variant="outlined"
+          name="email"
+          onChange={handleChange}
           value={email ? email : email}
         />
-
-        <label htmlFor="url">URL</label>
-        <input
-          onChange={handleChange}
-          name="url"
-          type="text"
+        
+        <TextField
           id="url"
+          label="Website URL"
+          variant="outlined"
+          name="url"
+          onChange={handleChange}
           value={url ? url : ''}
         />
-
-        <label htmlFor="address">Address</label>
-        <input
-          onChange={handleChange}
-          name="address"
-          type="text"
+        
+        <TextField
           id="address"
+          label="Physical address"
+          variant="outlined"
+          name="address"
+          onChange={handleChange}
           value={address ? address : ''}
         />
 
-        <button>Submit section</button>
+        <Button type="submit" variant="contained" endIcon={<Check />}>
+          Submit section
+        </Button>
       </form>
     );
   };
@@ -102,9 +112,15 @@ class GeneralInfo extends React.Component {
 
     return (
       <section>
-        <h3>Personal Details</h3>
+        <Typography variant="h5">Personal Details</Typography>
         { sectionSet ? this.info() : this.form() }
-        <button onClick={ (e) => { resetSection('personal', inputNames) } }>Reset section</button>
+        <Button
+          onClick={ (e) => { resetSection('personal', inputNames) } }
+          variant="contained"
+          endIcon={<RestartAlt />}
+        >
+          Reset section
+        </Button>
       </section>
     );
   }

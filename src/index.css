@@ -5,7 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: rosybrown;
+  background-color: #343536;
 }
 
 code {
@@ -13,7 +13,7 @@ code {
     monospace;
 }
 
-main {
+#root {
   margin: 0 auto;
   padding: 6px 12px;
 }

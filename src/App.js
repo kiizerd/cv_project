@@ -2,6 +2,42 @@ import PersonalInfo from './components/PersonalInfo';
 import EducationExperience from './components/EducationExperience';
 import PracticalExperience from './components/PracticalExperience';
 import React from 'react'
+import Button from '@mui/material/Button';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { red, amber } from '@mui/material/colors';
+
+const theme = createTheme({
+  palette: {
+    mode: 'dark'
+  },
+  typography: {
+    h5: {
+      color: 'blanchedalmond'
+    },
+    body1: {
+      color: 'blanchedalmond'
+    },
+    button: {
+      color: 'blanchedalmond'
+    },
+  },
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          margin: '4px 6px'
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          margin: '4px 8px'
+        }
+      }
+    }
+  }
+});
 
 class App extends React.Component {
   constructor(props) {
@@ -96,8 +132,8 @@ class App extends React.Component {
   }
 
   handleSectionReset(sectionKey, inputNames) {
-    const confirmation = window.confirm(`This will reset all data in the ${sectionKey} section. Confirm?`)
-    if (!confirmation) return;
+    // const confirmation = window.confirm(`This will reset all data in the ${sectionKey} section. Confirm?`)
+    // if (!confirmation) return;
     const updatedData = {};
     const updatedSections = {};
     if (sectionKey === 'personal') {      
@@ -126,7 +162,7 @@ class App extends React.Component {
   render() {
     const { sections, data } = this.state;
     return (
-      <main>
+      <ThemeProvider theme={theme}>
         <PersonalInfo
           sectionSet={sections.personal}
           handleChange={this.handleInputChange}
@@ -150,6 +186,7 @@ class App extends React.Component {
         <PracticalExperience
           sectionSet={sections.practical}
           addSubSection={this.addSubSection}
+          removeSubSection={this.removeSubSection}
           handleChange={this.handleInputChange}
           handleSubmit={this.handleSubmitSection}
           editSection={this.handleEditSection}
@@ -158,8 +195,8 @@ class App extends React.Component {
         />
 
         <hr/>
-        <button onClick={this.handleFullReset}>Reset all</button>
-      </main>
+        <Button onClick={this.handleFullReset}>Reset all</Button>
+      </ThemeProvider>
     );
   }
 };

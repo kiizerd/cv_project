@@ -1,4 +1,6 @@
 import React from 'react';
+import { Button, Typography, TextField } from '@mui/material';
+import { Check, Close, Edit, Add, RestartAlt } from '@mui/icons-material';
 
 class PracticalExperience extends React.Component {
   sectionData(index) {
@@ -17,31 +19,58 @@ class PracticalExperience extends React.Component {
 
     return (
       <div key={`practical-section-${index}`}>
-        <p id={`company-name-${index}`}>{companyName}</p>
-        <p id={`position-title-${index}`}>{positionTitle}</p>
-        <p id={`start-date-${index}`}>{startDate}</p>
-        <p id={`end-date-${index}`}>{endDate}</p>
+        <Typography variant="body1" id={`company-name-${index}`}>
+          {companyName}
+        </Typography>
+        <Typography variant="body1" id={`position-title-${index}`}>
+          {positionTitle}
+        </Typography>
+        <Typography variant="body1" id={`start-date-${index}`}>
+          {startDate}
+        </Typography>
+        <Typography variant="body1" id={`end-date-${index}`}>
+          {endDate}
+        </Typography>
 
-        <button
+        <Button
+          variant="contained"
+          endIcon={<Edit />}
           onClick={(e) => { editSection('practical', index) }}
         >
           Edit section
-        </button>
+        </Button>
 
-        <button
+        <Button
+          variant="contained"
+          endIcon={<Close />}
           onClick={(e) => { removeSubSection('practical', index) }}
         >
           Remove section
-        </button>
+        </Button>
 
         <hr className="subsection-divider" />
       </div>
     );
   }
 
+  removeSectionBtn(index, contained=true) {
+    const { removeSubSection } = this.props;
+    
+    return (
+      <Button
+        variant={contained ? "contained" : ''}
+        endIcon={<Close />}
+        onClick={(e) => { removeSubSection('practical', index) }}
+      >
+        Remove section
+      </Button>
+    );
+  }
+
   form(index) {
     const { handleChange, handleSubmit } = this.props;
     const { companyName, positionTitle, startDate, endDate } = this.sectionData(index);
+    const sectionRemoveable = index !== 0;
 
     return (
       <form
@@ -49,43 +78,48 @@ class PracticalExperience extends React.Component {
         key={`practical-section-${index}`}
         className="PracticalExperience"
       >
-        <label htmlFor={`company-name-${index}`}>Company Name</label>
-        <input
-          onChange={handleChange}
-          type="text"
-          name={`company-name-${index}`}
+        
+        <TextField
           id={`company-name-${index}`}
+          label="Company name"
+          variant="outlined"
+          name={`company-name-${index}`}
+          onChange={handleChange}
           value={companyName ? companyName : ''}
         />
-
-        <label htmlFor={`position-title-${index}`}>Position title</label>
-        <input
-          onChange={handleChange}
-          type="text"
-          name={`position-title-${index}`}
+        
+        <TextField
           id={`position-title-${index}`}
+          label="Position title"
+          variant="outlined"
+          name={`position-title-${index}`}
+          onChange={handleChange}
           value={positionTitle ? positionTitle : ''}
         />
-
-        <label htmlFor={`start-date-${index}`}>Start date</label>
-        <input
-          onChange={handleChange}
-          type="text"
-          name={`start-date-${index}`}
+        
+        <TextField
           id={`start-date-${index}`}
+          label="Start date"
+          variant="outlined"
+          name={`start-date-${index}`}
+          onChange={handleChange}
           value={startDate ? startDate : ''}
         />
-
-        <label htmlFor={`end-date-${index}`}>End date</label>
-        <input
-          onChange={handleChange}
-          type="text"
-          name={`end-date-${index}`}
+        
+        <TextField
           id={`end-date-${index}`}
+          label="End date"
+          variant="outlined"
+          name={`end-date-${index}`}
+          onChange={handleChange}
           value={endDate ? endDate : ''}
         />
 
-        <button type="submit" >Submit section</button>
+        <Button type="submit" variant="contained"  endIcon={<Check />}>
+          Submit section
+        </Button>
+
+        {sectionRemoveable ? this.removeSectionBtn(index, false) : null}
       </form>
     );
   };
@@ -96,22 +130,25 @@ class PracticalExperience extends React.Component {
 
     return (
       <section className="practical-section">
-        <h3>Experience</h3>
+      <Typography variant="h5">Experience</Typography>
         { sectionSet.map((_, index) => {
             return sectionSet[index] ? this.info(index) : this.form(index)
           })
         }
-        <button
-          onClick={ (e) => { addSubSection('practical') } }
+        <Button
+          variant="contained"
+          endIcon={<Add />}
+          onClick={(e) => { addSubSection('practical') } }
         >
           Add experience
-        </button>
-
-        <button
+        </Button>
+        <Button
           onClick={ (e) => { resetSection('practical', inputNames) } }
+          variant="contained"
+          endIcon={<RestartAlt />}
         >
           Reset section
-        </button>
+        </Button>
       </section>
     );
   }
