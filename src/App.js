@@ -1,4 +1,4 @@
-import GeneralInfo from './components/GeneralInfo';
+import PersonalInfo from './components/PersonalInfo';
 import EducationExperience from './components/EducationExperience';
 import PracticalExperience from './components/PracticalExperience';
 import React from 'react'
@@ -127,7 +127,7 @@ class App extends React.Component {
     const { sections, data } = this.state;
     return (
       <main>
-        <GeneralInfo
+        <PersonalInfo
           sectionSet={sections.personal}
           handleChange={this.handleInputChange}
           handleSubmit={this.handleSubmitSection}
@@ -157,6 +157,7 @@ class App extends React.Component {
           sectionData={data}
         />
 
+        <hr/>
         <button onClick={this.handleFullReset}>Reset all</button>
       </main>
     );
