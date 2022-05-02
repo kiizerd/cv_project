@@ -17,11 +17,15 @@ const theme = createTheme({
     body1: {
       color: 'blanchedalmond'
     },
+    subtitle2: {
+      color: 'blanchedalmond'
+    },
     button: {
       color: 'blanchedalmond'
     },
   },
   components: {
+
     MuiTextField: {
       styleOverrides: {
         root: {
@@ -32,7 +36,7 @@ const theme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          margin: '4px 8px'
+          margin: '4px 4px'
         }
       }
     }

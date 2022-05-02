@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Typography, TextField } from '@mui/material';
+import { Button, Stack, Typography, TextField } from '@mui/material';
 import { Check, Edit, RestartAlt } from '@mui/icons-material';
 
 class GeneralInfo extends React.Component {
@@ -21,8 +21,11 @@ class GeneralInfo extends React.Component {
 
     return (
       <>
-        <Typography variant="body1" id='first-name'>{firstName}</Typography>
-        <Typography variant="body1" id='last-name'>{lastName}</Typography>
+        <Stack direction="row" spacing={0.5}>
+          <Typography variant="body1" id='first-name'>{firstName}</Typography>
+          <Typography variant="body1" id='last-name'>{lastName}</Typography>
+        </Stack>
+
         <Typography variant="body1" id="phone">{phone}</Typography>
         <Typography variant="body1" id="email">{email}</Typography>
         <Typography variant="body1" id="url">{url}</Typography>
@@ -31,6 +34,8 @@ class GeneralInfo extends React.Component {
         <Button
           variant="contained"
           endIcon={<Edit />}
+          color='secondary'
+          size='small'
           onClick={ (e) => { editSection('personal') } }
         >
           Edit section
@@ -45,25 +50,30 @@ class GeneralInfo extends React.Component {
 
     return (
       <form onSubmit={ (e) => { handleSubmit(e, 'personal') }} className="GeneralInfo">
-        <TextField
-          id="first-name"
-          label="First name"
-          variant="outlined"
-          name="first-name"
-          onChange={handleChange}
-          value={firstName ? firstName : ''}
-        />
+        <Stack direction="row">
+          <TextField
+            id="first-name"
+            label="First name"
+            variant="outlined"
+            name="first-name"
+            onChange={handleChange}
+            value={firstName ? firstName : ''}
+          />
 
+          <TextField
+            id="last-name"
+            label="Last name"
+            variant="outlined"
+            name="last-name"
+            onChange={handleChange}
+            value={lastName ? lastName : ''}
+          />
+        </Stack>
+
+        <Stack direction="row">
         <TextField
-          id="last-name"
-          label="Last name"
-          variant="outlined"
-          name="last-name"
-          onChange={handleChange}
-          value={lastName ? lastName : ''}
-        />
-        
-        <TextField
+          item
+          xs={6}
           id="phone"
           label="Phone number"
           variant="outlined"
@@ -80,7 +90,9 @@ class GeneralInfo extends React.Component {
           onChange={handleChange}
           value={email ? email : email}
         />
+        </Stack>
         
+        <Stack direction="row">
         <TextField
           id="url"
           label="Website URL"
@@ -98,6 +110,7 @@ class GeneralInfo extends React.Component {
           onChange={handleChange}
           value={address ? address : ''}
         />
+        </Stack>
 
         <Button type="submit" variant="contained" endIcon={<Check />}>
           Submit section

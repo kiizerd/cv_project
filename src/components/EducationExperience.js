@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Typography, TextField } from '@mui/material';
+import { Button, Stack, Typography, TextField } from '@mui/material';
 import { Check, Close, Edit, Add, RestartAlt } from '@mui/icons-material';
 
 class EducationExperience extends React.Component {
@@ -18,19 +18,25 @@ class EducationExperience extends React.Component {
 
     return (
       <div key={`education-section-${index}`}>
-        <Typography variant="body1" id={`school-name-${index}`}>
-          {schoolName}
-        </Typography>
-        <Typography variant="body1" id={`title-of-study-${index}`}>
-          {titleOfStudy}
-        </Typography>
-        <Typography variant="body1" id={`date-of-study-${index}`}>
-          {dateOfStudy}
-        </Typography>
+        <Stack direction="row" spacing={1}>
+          <Typography variant="body1" id={`school-name-${index}`}>
+            {schoolName}
+          </Typography>
+          <Typography variant="body1">-</Typography>
+          <Typography fontStyle='italic' variant="body1" id={`title-of-study-${index}`}>
+            {titleOfStudy}
+          </Typography>
+          <Typography variant="body1">-</Typography>
+          <Typography variant="body1" id={`date-of-study-${index}`}>
+            {dateOfStudy}
+          </Typography>
+        </Stack>
 
         <Button
           variant="contained"
           endIcon={<Edit />}
+          color='secondary'
+          size='small'
           onClick={(e) => { editSection('education', index) }}
         >
           Edit section
@@ -39,6 +45,8 @@ class EducationExperience extends React.Component {
         <Button
           variant="contained"
           endIcon={<Close />}
+          color='secondary'
+          size='small'
           onClick={(e) => { removeSubSection('education', index) }}
         >
           Remove section
@@ -68,6 +76,7 @@ class EducationExperience extends React.Component {
           value={schoolName ? schoolName: ''}
         />
         
+        <Stack direction="row">
         <TextField
           id={`title-of-study-${index}`}
           label="Title of study"
@@ -85,6 +94,7 @@ class EducationExperience extends React.Component {
           onChange={handleChange}
           value={dateOfStudy ? dateOfStudy : ''}
         />
+        </Stack>
 
         <Button type="submit" variant="contained" endIcon={<Check />}>
           Submit section

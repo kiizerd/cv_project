@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Typography, TextField } from '@mui/material';
+import { Button, Stack, Typography, TextField } from '@mui/material';
 import { Check, Close, Edit, Add, RestartAlt } from '@mui/icons-material';
 
 class PracticalExperience extends React.Component {
@@ -14,40 +14,40 @@ class PracticalExperience extends React.Component {
   }
 
   info(index) {
-    const { editSection, removeSubSection } = this.props;
+    const { editSection } = this.props;
     const { companyName, positionTitle, startDate, endDate } = this.sectionData(index);
 
     return (
       <div key={`practical-section-${index}`}>
-        <Typography variant="body1" id={`company-name-${index}`}>
-          {companyName}
-        </Typography>
-        <Typography variant="body1" id={`position-title-${index}`}>
-          {positionTitle}
-        </Typography>
-        <Typography variant="body1" id={`start-date-${index}`}>
-          {startDate}
-        </Typography>
-        <Typography variant="body1" id={`end-date-${index}`}>
-          {endDate}
-        </Typography>
+        <Stack direction="row" spacing={1}>
+          <Typography variant="body1" id={`company-name-${index}`}>
+            {companyName}
+          </Typography>
+          <Typography variant="body1">-</Typography>
+          <Typography fontStyle='italic' variant="body1" id={`position-title-${index}`}>
+            {positionTitle}
+          </Typography>
+          <Typography variant="body1">(</Typography>
+          <Typography variant="body1" id={`start-date-${index}`}>
+            {startDate}
+          </Typography>
+          <Typography variant="body1">-</Typography>
+          <Typography variant="body1" id={`end-date-${index}`}>
+            {endDate}
+          </Typography>
+          <Typography variant="body1">)</Typography>
+        </Stack>
 
         <Button
           variant="contained"
           endIcon={<Edit />}
+          color='secondary'
+          size='small'
           onClick={(e) => { editSection('practical', index) }}
         >
           Edit section
         </Button>
-
-        <Button
-          variant="contained"
-          endIcon={<Close />}
-          onClick={(e) => { removeSubSection('practical', index) }}
-        >
-          Remove section
-        </Button>
-
+        {this.removeSectionBtn(index)}
         <hr className="subsection-divider" />
       </div>
     );
@@ -60,6 +60,8 @@ class PracticalExperience extends React.Component {
       <Button
         variant={contained ? "contained" : ''}
         endIcon={<Close />}
+        color='secondary'
+        size='small'
         onClick={(e) => { removeSubSection('practical', index) }}
       >
         Remove section
@@ -78,7 +80,7 @@ class PracticalExperience extends React.Component {
         key={`practical-section-${index}`}
         className="PracticalExperience"
       >
-        
+        <Stack direction="row">
         <TextField
           id={`company-name-${index}`}
           label="Company name"
@@ -96,7 +98,9 @@ class PracticalExperience extends React.Component {
           onChange={handleChange}
           value={positionTitle ? positionTitle : ''}
         />
-        
+        </Stack>
+
+        <Stack direction="row">
         <TextField
           id={`start-date-${index}`}
           label="Start date"
@@ -114,6 +118,7 @@ class PracticalExperience extends React.Component {
           onChange={handleChange}
           value={endDate ? endDate : ''}
         />
+        </Stack>
 
         <Button type="submit" variant="contained"  endIcon={<Check />}>
           Submit section
