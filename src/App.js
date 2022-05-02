@@ -12,6 +12,7 @@ const theme = createTheme({
   },
   typography: {
     h5: {
+      margin: '10px 5px 3px',
       color: 'blanchedalmond'
     },
     body1: {
@@ -25,7 +26,6 @@ const theme = createTheme({
     },
   },
   components: {
-
     MuiTextField: {
       styleOverrides: {
         root: {
@@ -46,7 +46,6 @@ const theme = createTheme({
 class App extends React.Component {
   constructor(props) {
     super(props);
-
     this.state = {
       data: {},
       sections: {
@@ -62,6 +61,7 @@ class App extends React.Component {
     this.handleSubmitSection = this.handleSubmitSection.bind(this);
     this.handleEditSection = this.handleEditSection.bind(this);
     this.handleSectionReset = this.handleSectionReset.bind(this);
+    this.handleResetDescription = this.handleResetDescription.bind(this);
     this.handleFullReset = this.handleFullReset.bind(this);
   };
 
@@ -163,6 +163,13 @@ class App extends React.Component {
     });
   };
 
+  handleResetDescription(index) {
+    const { data } = this.state;
+    this.setState({
+      data: Object.assign(data, { [`description-${index}`]: undefined })
+    })
+  }
+
   render() {
     const { sections, data } = this.state;
     return (
@@ -195,6 +202,7 @@ class App extends React.Component {
           handleSubmit={this.handleSubmitSection}
           editSection={this.handleEditSection}
           resetSection={this.handleSectionReset}
+          resetDescription={this.handleResetDescription}
           sectionData={data}
         />
 
