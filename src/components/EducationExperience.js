@@ -37,8 +37,24 @@ class EducationExperience extends React.Component {
     return elements;
   }
 
+  removeSectionBtn(index, contained=true) {
+    const { removeSubSection } = this.props;
+    
+    return (
+      <Button
+        variant={contained ? "contained" : ''}
+        endIcon={<Close />}
+        color='secondary'
+        size='small'
+        onClick={(e) => { removeSubSection('education', index) }}
+      >
+        Remove section
+      </Button>
+    );
+  }
+
   info = (index) => {
-    const { editSection, removeSubSection } = this.props;
+    const { editSection } = this.props;
     const infoString = this.formatData(index);
 
     return (
@@ -57,15 +73,7 @@ class EducationExperience extends React.Component {
           Edit section
         </Button>
 
-        <Button
-          variant="contained"
-          endIcon={<Close />}
-          color='secondary'
-          size='small'
-          onClick={(e) => { removeSubSection('education', index) }}
-        >
-          Remove section
-        </Button>
+        {this.removeSectionBtn(index, true)}
 
         <hr className="subsection-divider" />
       </div>
@@ -75,6 +83,7 @@ class EducationExperience extends React.Component {
   form(index) {
     const { handleChange, handleSubmit } = this.props;
     const { schoolName, titleOfStudy, dateOfStudy } = this.sectionData(index);
+    const sectionRemoveable = index !== 0;
 
     return (
       <form
@@ -115,6 +124,8 @@ class EducationExperience extends React.Component {
         <Button type="submit" variant="contained" endIcon={<Check />}>
           Submit section
         </Button>
+
+        {sectionRemoveable ? this.removeSectionBtn(index, false) : null}
       </form>
     );
   };

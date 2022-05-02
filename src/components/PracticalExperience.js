@@ -15,26 +15,25 @@ class PracticalExperience extends React.Component {
 
   addDescription(description, index) {
     if (description.length <= 0) return;
-    this.props.resetDescription(index);
     const descriptions = this.state.descriptions.slice();
     if (!descriptions[index]) {
       descriptions[index] = [];
     }
     descriptions[index].push(description);
     this.setState({ descriptions });
-    console.log(this.state.descriptions)
+    this.props.resetDescription(description, index, descriptions[index].length);
   };
 
   removeDescription(index, descIndex) {
     const indexedDescriptions = this.state.descriptions[index];
-    const updatedDesc = indexedDescriptions.slice(0, index).concat(indexedDescriptions.slice(index + 1));
+    const updatedDesc = indexedDescriptions.slice(0, descIndex).concat(indexedDescriptions.slice(descIndex + 1));
     const descriptions = this.state.descriptions.slice()
     descriptions[index] = updatedDesc;
     this.setState({ descriptions });
   };
 
   currentDescriptions(index, status) {
-    const submitted = this.state.descriptions[index].map((desc, descIndex) => {
+    const submitted = this.state.descriptions[index]?.map((desc, descIndex) => {
       return (
         <Stack sx={{ alignItems: 'center' }} direction="row">
           <Circle sx={{ fontSize: 'small', color: 'blanchedalmond' }} />
@@ -57,7 +56,7 @@ class PracticalExperience extends React.Component {
         </Stack>
       );
     });
-    const inProgress = this.state.descriptions[index].map((desc, descIndex) => {
+    const inProgress = this.state.descriptions[index]?.map((desc, descIndex) => {
       return (
         <Paper
           sx={{ m: '4px 8px', display: 'flex', justifyContent: 'space-between' }}
@@ -174,7 +173,13 @@ class PracticalExperience extends React.Component {
 
     return (
       <form
-        onSubmit={ (e) => handleSubmit(e, 'practical', index)}
+        onSubmit={ (e) => {
+          e.preventDefault()
+          const descriptions = this.state.descriptions.slice()
+          descriptions.push([]);
+          this.setState({ descriptions });
+          handleSubmit(e, 'practical', index)
+        } }
         key={`practical-section-${index}`}
         className="PracticalExperience"
       >
@@ -270,7 +275,8 @@ class PracticalExperience extends React.Component {
           variant="contained"
           endIcon={<Add />}
           onClick={(e) => {
-            const descriptions = this.state.descriptions.slice().push([]);
+            const descriptions = this.state.descriptions.slice()
+            descriptions.push([]);
             this.setState({ descriptions });
             addSubSection('practical')
           } }

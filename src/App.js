@@ -63,6 +63,7 @@ class App extends React.Component {
     this.handleSectionReset = this.handleSectionReset.bind(this);
     this.handleResetDescription = this.handleResetDescription.bind(this);
     this.handleFullReset = this.handleFullReset.bind(this);
+    this.exportData = this.exportData.bind(this);
   };
 
   handleInputChange(event) {
@@ -163,11 +164,27 @@ class App extends React.Component {
     });
   };
 
-  handleResetDescription(index) {
+  handleResetDescription(description, index, descIndex) {
     const { data } = this.state;
     this.setState({
-      data: Object.assign(data, { [`description-${index}`]: undefined })
+      data: Object.assign(data, {
+        [`description-${index}`]: undefined,
+        [`description-${index}-${descIndex}`]: description
+      })
     })
+  };
+
+  exportData() {
+    const { data } = this.state;
+    const filteredData = {};
+    Object.keys(data).forEach((key) => {
+      if (data[key]) {
+        filteredData[key] = data[key]
+      }
+    })
+
+    const json = JSON.stringify(filteredData);
+    console.log(json)
   }
 
   render() {
@@ -207,7 +224,8 @@ class App extends React.Component {
         />
 
         <hr/>
-        <Button onClick={this.handleFullReset}>Reset all</Button>
+        <Button variant="contained" onClick={this.exportData}>Export as JSON</Button>
+        <Button onClick={this.handleFullReset}>Reset all</Button>        
       </ThemeProvider>
     );
   }
