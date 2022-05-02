@@ -12,24 +12,39 @@ class EducationExperience extends React.Component {
     return { schoolName, titleOfStudy, dateOfStudy };
   }
 
+  formatData(index) {
+    const { schoolName, titleOfStudy, dateOfStudy } = this.sectionData(index);
+    const elements = [];
+    if (schoolName) {
+      elements.push(
+        <Typography variant="body1" id={`school-name-${index}`}>{schoolName}</Typography>
+      );
+    }
+    if (titleOfStudy) {
+      elements.push(
+        <Typography variant="body1">-</Typography>,
+        <Typography fontStyle='italic' variant="body1" id={`title-of-study-${index}`}>
+          {titleOfStudy}
+        </Typography>
+      );
+    }
+    if (dateOfStudy) {
+      elements.push(
+        <Typography variant="body1">( {dateOfStudy} )</Typography>
+      );      
+    }
+
+    return elements;
+  }
+
   info = (index) => {
     const { editSection, removeSubSection } = this.props;
-    const { schoolName, titleOfStudy, dateOfStudy } = this.sectionData(index);
+    const infoString = this.formatData(index);
 
     return (
       <div key={`education-section-${index}`}>
         <Stack direction="row" spacing={1}>
-          <Typography variant="body1" id={`school-name-${index}`}>
-            {schoolName}
-          </Typography>
-          <Typography variant="body1">-</Typography>
-          <Typography fontStyle='italic' variant="body1" id={`title-of-study-${index}`}>
-            {titleOfStudy}
-          </Typography>
-          <Typography variant="body1">-</Typography>
-          <Typography variant="body1" id={`date-of-study-${index}`}>
-            {dateOfStudy}
-          </Typography>
+          {infoString}
         </Stack>
 
         <Button
@@ -68,6 +83,7 @@ class EducationExperience extends React.Component {
         className="EducationExperience"
       >
         <TextField
+          required
           id={`school-name-${index}`}
           label="School name"
           variant="outlined"

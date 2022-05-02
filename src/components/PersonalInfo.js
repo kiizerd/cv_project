@@ -52,6 +52,7 @@ class GeneralInfo extends React.Component {
       <form onSubmit={ (e) => { handleSubmit(e, 'personal') }} className="GeneralInfo">
         <Stack direction="row">
           <TextField
+            required
             id="first-name"
             label="First name"
             variant="outlined"
@@ -61,6 +62,7 @@ class GeneralInfo extends React.Component {
           />
 
           <TextField
+            required
             id="last-name"
             label="Last name"
             variant="outlined"
