@@ -1,5 +1,6 @@
 {
   "name": "cv-project",
+  "homepage": "https://kiizerd.github.io/cv_project/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
