@@ -129,6 +129,7 @@ class GeneralInfo extends React.Component {
       <section>
         <Typography variant="h5">Personal Details</Typography>
         { sectionSet ? this.info() : this.form() }
+        <br/>
         <Button
           onClick={ (e) => { resetSection('personal', inputNames) } }
           variant="contained"
