@@ -2,9 +2,9 @@ import React from 'react';
 import { Button, Stack, Typography, TextField } from '@mui/material';
 import { Check, Close, Edit, Add, RestartAlt } from '@mui/icons-material';
 
-class EducationExperience extends React.Component {
-  sectionData(index) {
-    const data = this.props.sectionData;
+function EducationExperience(props) {
+  function sectionData(index) {
+    const data = props.sectionData
     const schoolName = data[`school-name-${index}`];
     const titleOfStudy = data[`title-of-study-${index}`];
     const dateOfStudy = data[`date-of-study-${index}`];
@@ -12,8 +12,8 @@ class EducationExperience extends React.Component {
     return { schoolName, titleOfStudy, dateOfStudy };
   }
 
-  formatData(index) {
-    const { schoolName, titleOfStudy, dateOfStudy } = this.sectionData(index);
+  function formatData(index) {
+    const { schoolName, titleOfStudy, dateOfStudy } = sectionData(index);
     const elements = [];
     if (schoolName) {
       elements.push(
@@ -37,8 +37,8 @@ class EducationExperience extends React.Component {
     return elements;
   }
 
-  removeSectionBtn(index, contained=true) {
-    const { removeSubSection } = this.props;
+  function removeSectionBtn(index, contained=true) {
+    const { removeSubSection } = props;
     
     return (
       <Button
@@ -53,9 +53,9 @@ class EducationExperience extends React.Component {
     );
   }
 
-  info = (index) => {
-    const { editSection } = this.props;
-    const infoString = this.formatData(index);
+  function info (index) {
+    const { editSection } = props;
+    const infoString = formatData(index);
 
     return (
       <div key={`education-section-${index}`}>
@@ -73,16 +73,16 @@ class EducationExperience extends React.Component {
           Edit section
         </Button>
 
-        {this.removeSectionBtn(index, true)}
+        {removeSectionBtn(index, true)}
 
         <hr className="subsection-divider" />
       </div>
     );
   }
 
-  form(index) {
-    const { handleChange, handleSubmit } = this.props;
-    const { schoolName, titleOfStudy, dateOfStudy } = this.sectionData(index);
+  function form(index) {
+    const { handleChange, handleSubmit } = props;
+    const { schoolName, titleOfStudy, dateOfStudy } = sectionData(index);
     const sectionRemoveable = index !== 0;
 
     return (
@@ -125,39 +125,37 @@ class EducationExperience extends React.Component {
           Submit section
         </Button>
 
-        {sectionRemoveable ? this.removeSectionBtn(index, false) : null}
+        {sectionRemoveable ? removeSectionBtn(index, false) : null}
       </form>
     );
   };
 
-  render() {
-    const { sectionSet, addSubSection, resetSection } = this.props;
-    const inputNames = ['school-name', 'title-of-study', 'date-of-study'];
+  const { sectionSet, addSubSection, resetSection } = props;
+  const inputNames = ['school-name', 'title-of-study', 'date-of-study'];
 
-    return (
-      <section className="education-section">
-      <Typography variant="h5">Education</Typography>
-        { sectionSet.map((_, index) => {
-            return sectionSet[index] ? this.info(index) : this.form(index);
-          })
-        }
-        <Button
-          variant="contained"
-          endIcon={<Add />}
-          onClick={(e) => { addSubSection('education') } }
-        >
-          Add education
-        </Button>
-        <Button
-          onClick={ (e) => { resetSection('education', inputNames) } }
-          variant="contained"
-          endIcon={<RestartAlt />}
-        >
-          Reset section
-        </Button>
-      </section>
-    );
-  }
+  return (
+    <section className="education-section">
+    <Typography variant="h5">Education</Typography>
+      { sectionSet.map((_, index) => {
+          return sectionSet[index] ? info(index) : form(index);
+        })
+      }
+      <Button
+        variant="contained"
+        endIcon={<Add />}
+        onClick={(e) => { addSubSection('education') } }
+      >
+        Add education
+      </Button>
+      <Button
+        onClick={ (e) => { resetSection('education', inputNames) } }
+        variant="contained"
+        endIcon={<RestartAlt />}
+      >
+        Reset section
+      </Button>
+    </section>
+  );
 }
 
 export default EducationExperience;

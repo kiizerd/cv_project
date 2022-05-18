@@ -2,9 +2,9 @@ import React from 'react';
 import { Button, Stack, Typography, TextField } from '@mui/material';
 import { Check, Edit, RestartAlt } from '@mui/icons-material';
 
-class GeneralInfo extends React.Component {
-  sectionData() {
-    const data = this.props.sectionData;
+function GeneralInfo(props) {
+  const sectionData = () => {
+    const data = props.sectionData;
     const firstName = data['first-name'];
     const lastName = data['last-name'];
     const phone = data['phone'];
@@ -15,7 +15,7 @@ class GeneralInfo extends React.Component {
     return { firstName, lastName, phone, email, url, address };
   }
 
-  info() {
+  const info = () => {
     const { editSection } = this.props;
     const { firstName, lastName, phone, email, url, address} = this.sectionData();
 
@@ -45,9 +45,9 @@ class GeneralInfo extends React.Component {
     );
   }
 
-  form() {
-    const { handleChange, handleSubmit } = this.props;
-    const { firstName, lastName, phone, email, url, address} = this.sectionData();
+  const form = () => {
+    const { handleChange, handleSubmit } = props;
+    const { firstName, lastName, phone, email, url, address} = sectionData();
 
     return (
       <form onSubmit={ (e) => { handleSubmit(e, 'personal') }} className="GeneralInfo">
@@ -122,24 +122,22 @@ class GeneralInfo extends React.Component {
     );
   };
 
-  render() {
-    const { sectionSet, resetSection } = this.props;
-    const inputNames = ['first-name', 'last-name', 'email', 'phone', 'url', 'address'];
+  const { sectionSet, resetSection } = props;
+  const inputNames = ['first-name', 'last-name', 'email', 'phone', 'url', 'address'];
 
-    return (
-      <section>
-        <Typography variant="h5">Personal Details</Typography>
-        { sectionSet ? this.info() : this.form() }
-        <Button
-          onClick={ (e) => { resetSection('personal', inputNames) } }
-          variant="contained"
-          endIcon={<RestartAlt />}
-        >
-          Reset section
-        </Button>
-      </section>
-    );
-  }
+  return (
+    <section>
+      <Typography variant="h5">Personal Details</Typography>
+      { sectionSet ? info() : form() }
+      <Button
+        onClick={ (e) => { resetSection('personal', inputNames) } }
+        variant="contained"
+        endIcon={<RestartAlt />}
+      >
+        Reset section
+      </Button>
+    </section>
+  );
 }
 
 export default GeneralInfo;

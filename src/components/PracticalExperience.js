@@ -1,39 +1,33 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Button, IconButton, Paper, Stack, Typography, TextField
 } from '@mui/material';
 import { Add, Circle, Check, Close, Edit, RestartAlt } from '@mui/icons-material';
 
-class PracticalExperience extends React.Component {
-  constructor(props) {
-    super(props);
+function PracticalExperience(props) {
+  const [descriptions, setDescriptions] = useState([[]])
 
-    this.state = { descriptions: [[]] }
-    this.addDescription = this.addDescription.bind(this);
-    this.removeDescription = this.removeDescription.bind(this);
-  };
-
-  addDescription(description, index) {
+  function addDescription(description, index) {
     if (description.length <= 0) return;
-    const descriptions = this.state.descriptions.slice();
-    if (!descriptions[index]) {
-      descriptions[index] = [];
+    const newDescriptions = descriptions.slice();
+    if (!newDescriptions[index]) {
+      newDescriptions[index] = [];
     }
-    descriptions[index].push(description);
-    this.setState({ descriptions });
-    this.props.resetDescription(description, index, descriptions[index].length);
+    newDescriptions[index].push(description);
+    setDescriptions(newDescriptions);
+    props.resetDescription(description, index, descriptions[index].length);
   };
 
-  removeDescription(index, descIndex) {
-    const indexedDescriptions = this.state.descriptions[index];
+  function removeDescription(index, descIndex) {
+    const indexedDescriptions = descriptions[index];
     const updatedDesc = indexedDescriptions.slice(0, descIndex).concat(indexedDescriptions.slice(descIndex + 1));
-    const descriptions = this.state.descriptions.slice()
-    descriptions[index] = updatedDesc;
-    this.setState({ descriptions });
+    const newDescriptions = descriptions.slice()
+    newDescriptions[index] = updatedDesc;
+    setDescriptions(newDescriptions);
   };
 
-  currentDescriptions(index, status) {
-    const submitted = this.state.descriptions[index]?.map((desc, descIndex) => {
+  function currentDescriptions(index, status) {
+    const submitted = descriptions[index]?.map((desc, descIndex) => {
       return (
         <Stack sx={{ alignItems: 'center' }} direction="row">
           <Circle sx={{ fontSize: 'small', color: 'blanchedalmond' }} />
@@ -56,7 +50,7 @@ class PracticalExperience extends React.Component {
         </Stack>
       );
     });
-    const inProgress = this.state.descriptions[index]?.map((desc, descIndex) => {
+    const inProgress = descriptions[index]?.map((desc, descIndex) => {
       return (
         <Paper
           sx={{ m: '4px 8px', display: 'flex', justifyContent: 'space-between' }}
@@ -70,7 +64,7 @@ class PracticalExperience extends React.Component {
           </Typography>
           <div>        
             <IconButton
-              onClick={() => this.removeDescription(index, descIndex)}
+              onClick={() => removeDescription(index, descIndex)}
             >
               <Close />
             </IconButton>
@@ -82,8 +76,8 @@ class PracticalExperience extends React.Component {
     return status ? inProgress : submitted;
   };
 
-  sectionData(index) {
-    const data = this.props.sectionData;
+  function sectionData(index) {
+    const data = props.sectionData;
     const companyName = data[`company-name-${index}`];
     const positionTitle = data[`position-title-${index}`];
     const startDate = data[`start-date-${index}`];
@@ -93,8 +87,8 @@ class PracticalExperience extends React.Component {
     return { companyName, positionTitle, startDate, endDate, description }
   }
 
-  formatData(index) {
-    const { companyName, positionTitle, startDate, endDate } = this.sectionData(index);
+  function formatData(index) {
+    const { companyName, positionTitle, startDate, endDate } = sectionData(index);
     const elements = []
     if (companyName) {
       elements.push(
@@ -125,8 +119,8 @@ class PracticalExperience extends React.Component {
     return elements;
   }
 
-  removeSectionBtn(index, contained=true) {
-    const { removeSubSection } = this.props;
+  function removeSectionBtn(index, contained=true) {
+    const { removeSubSection } = props;
     
     return (
       <Button
@@ -141,16 +135,16 @@ class PracticalExperience extends React.Component {
     );
   }
 
-  info(index) {
-    const { editSection } = this.props;
-    const infoString = this.formatData(index);
+  function info(index) {
+    const { editSection } = props;
+    const infoString = formatData(index);
 
     return (
       <div key={`practical-section-${index}`}>
         <Stack direction="row" spacing={1}>
           {infoString}
         </Stack>
-        {this.currentDescriptions(index, false)}
+        {currentDescriptions(index, false)}
         <Button
           variant="contained"
           endIcon={<Edit />}
@@ -160,24 +154,24 @@ class PracticalExperience extends React.Component {
         >
           Edit section
         </Button>
-        {this.removeSectionBtn(index)}
+        {removeSectionBtn(index)}
         <hr className="subsection-divider" />
       </div>
     );
   }
 
-  form(index) {
-    const { handleChange, handleSubmit } = this.props;
-    const { companyName, positionTitle, startDate, endDate, description } = this.sectionData(index);
+  function form(index) {
+    const { handleChange, handleSubmit } = props;
+    const { companyName, positionTitle, startDate, endDate, description } = sectionData(index);
     const sectionRemoveable = index !== 0;
 
     return (
       <form
         onSubmit={ (e) => {
           e.preventDefault()
-          const descriptions = this.state.descriptions.slice()
-          descriptions.push([]);
-          this.setState({ descriptions });
+          const newDescriptions = descriptions.slice()
+          newDescriptions.push([]);
+          setDescriptions(newDescriptions);
           handleSubmit(e, 'practical', index)
         } }
         key={`practical-section-${index}`}
@@ -224,7 +218,7 @@ class PracticalExperience extends React.Component {
         />
         </Stack>
 
-        {this.currentDescriptions(index, true)}
+        {currentDescriptions(index, true)}
 
         <Stack direction="row" sx={{ display: 'flex' }}>
         <TextField
@@ -243,7 +237,7 @@ class PracticalExperience extends React.Component {
             sx={{ bgcolor: 'primary' }}
             variant="contained"
             size='small'
-            onClick={ () => { this.addDescription(description, index) } }
+            onClick={ () => { addDescription(description, index) } }
           >
             <Add/>
           </IconButton>
@@ -255,44 +249,42 @@ class PracticalExperience extends React.Component {
           Submit section
         </Button>
 
-        {sectionRemoveable ? this.removeSectionBtn(index, false) : null}
+        {sectionRemoveable ? removeSectionBtn(index, false) : null}
       </form>
     );
   };
+    
+  const { sectionSet, addSubSection, resetSection } = props;
+  const inputNames = ['company-name', 'position-title', 'start-date', 'end-date', 'description'];
 
-  render() {
-    const { sectionSet, addSubSection, resetSection } = this.props;
-    const inputNames = ['company-name', 'position-title', 'start-date', 'end-date', 'description'];
-
-    return (
-      <section className="practical-section">
-      <Typography variant="h5">Experience</Typography>
-        { sectionSet.map((_, index) => {
-            return sectionSet[index] ? this.info(index) : this.form(index)
-          })
-        }
-        <Button
-          variant="contained"
-          endIcon={<Add />}
-          onClick={(e) => {
-            const descriptions = this.state.descriptions.slice()
-            descriptions.push([]);
-            this.setState({ descriptions });
-            addSubSection('practical')
-          } }
-        >
-          Add experience
-        </Button>
-        <Button
-          onClick={ (e) => { resetSection('practical', inputNames) } }
-          variant="contained"
-          endIcon={<RestartAlt />}
-        >
-          Reset section
-        </Button>
-      </section>
-    );
-  }
+  return (
+    <section className="practical-section">
+    <Typography variant="h5">Experience</Typography>
+      { sectionSet.map((_, index) => {
+          return sectionSet[index] ? info(index) : form(index)
+        })
+      }
+      <Button
+        variant="contained"
+        endIcon={<Add />}
+        onClick={(e) => {
+          const newDescriptions = descriptions.slice()
+          newDescriptions.push([]);
+          setDescriptions(newDescriptions);
+          addSubSection('practical')
+        } }
+      >
+        Add experience
+      </Button>
+      <Button
+        onClick={ (e) => { resetSection('practical', inputNames) } }
+        variant="contained"
+        endIcon={<RestartAlt />}
+      >
+        Reset section
+      </Button>
+    </section>
+  );
 }
 
 export default PracticalExperience;

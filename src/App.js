@@ -1,7 +1,7 @@
 import PersonalInfo from './components/PersonalInfo';
 import EducationExperience from './components/EducationExperience';
 import PracticalExperience from './components/PracticalExperience';
-import React from 'react'
+import React, { useState } from 'react'
 import Button from '@mui/material/Button';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { red, amber } from '@mui/material/colors';
@@ -43,39 +43,19 @@ const theme = createTheme({
   }
 });
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: {},
-      sections: {
-        personal: false,
-        education: [false],
-        practical: [false],
-      },
-    };
+function App() {
+  const [data, setData] = useState({});
+  const [sections, setSections] = useState(defaultSections());
 
-    this.addSubSection = this.addSubSection.bind(this);
-    this.removeSubSection = this.removeSubSection.bind(this);
-    this.handleInputChange = this.handleInputChange.bind(this);
-    this.handleSubmitSection = this.handleSubmitSection.bind(this);
-    this.handleEditSection = this.handleEditSection.bind(this);
-    this.handleSectionReset = this.handleSectionReset.bind(this);
-    this.handleResetDescription = this.handleResetDescription.bind(this);
-    this.handleFullReset = this.handleFullReset.bind(this);
-    this.exportData = this.exportData.bind(this);
-  };
-
-  handleInputChange(event) {
+  function handleInputChange(event) {
     const { target } = event;
     const { value, name } = target;
-    const data = Object.assign(this.state.data, { [name]: value })
-    this.setState({ data });
+    const newData = Object.assign(data, { [name]: value })
+    setData(newData);
   };
 
-  handleSubmitSection(event, sectionKey, index) {
+  function handleSubmitSection(event, sectionKey, index) {
     event.preventDefault();
-    const { sections } = this.state;
     let updatedSections = null;
     if (sectionKey === 'personal') {
       updatedSections = Object.assign(sections, { [sectionKey]: true });
@@ -84,11 +64,10 @@ class App extends React.Component {
       oldSections[index] = true;
       updatedSections = Object.assign(sections, { [sectionKey]: oldSections });
     }
-    this.setState({ updatedSections });
+    setSections(updatedSections);
   }
 
-  handleEditSection(sectionKey, index) {
-    const { sections } = this.state;
+  function handleEditSection(sectionKey, index) {
     let updatedSections = null;
     if (sectionKey === 'personal') {
       updatedSections = Object.assign(sections, { [sectionKey]: false });
@@ -97,46 +76,40 @@ class App extends React.Component {
       oldSections[index] = false;
       updatedSections = Object.assign(sections, { [sectionKey]: oldSections });
     }
-    this.setState({ updatedSections });
+    setSections(updatedSections);
   }
   
-  addSubSection(sectionKey) {
-    const { sections } = this.state;
+  function addSubSection(sectionKey) {
     const section = [...sections[sectionKey], false];
-    this.setState({
-      sections: Object.assign(sections, { [sectionKey]: section })
-    });
+    setSections(Object.assign(sections, { [sectionKey]: section }));
   };
 
-  removeSubSection(sectionKey, index) {
-    const { sections } = this.state;
+  function removeSubSection(sectionKey, index) {
     const section = sections[sectionKey].slice();
     const updatedSection = section.slice(0, index).concat(section.slice(index + 1))
     if (updatedSection.length <= 0) {
-      this.setState({
-        sections: Object.assign(sections, { [sectionKey]: [false] })
-      });
+      setSections(Object.assign(sections, { [sectionKey]: [false] }));
     } else {
-      this.setState({
-        sections: Object.assign(sections, { [sectionKey]: updatedSection })
-      });
+      setSections(Object.assign(sections, { [sectionKey]: updatedSection }));
     }
   };
 
-  handleFullReset() {
+  function handleFullReset() {
     const confirmation = window.confirm('This will reset every section and erase ALL progress. Confirm?')
     if (!confirmation) return;
-    this.setState({
-      data: {},
-      sections: {
-        personal: false,
-        education: [false],
-        practical: [false],
-      },
-    });
+    setData({})
+    setSections(defaultSections())
   }
 
-  handleSectionReset(sectionKey, inputNames) {
+  function defaultSections() {
+    return {
+      personal: false,
+      education: [false],
+      practical: [false],
+    }
+  }
+
+  function handleSectionReset(sectionKey, inputNames) {
     // const confirmation = window.confirm(`This will reset all data in the ${sectionKey} section. Confirm?`)
     // if (!confirmation) return;
     const updatedData = {};
@@ -158,77 +131,53 @@ class App extends React.Component {
         return ''
       }).flat()
     }
-    this.setState({
-      section: Object.assign(this.state.sections, updatedSections),
-      data: Object.assign(this.state.data, updatedData)
-    });
+    setSections(Object.assign(this.state.sections, updatedSections))
+    setData(Object.assign(this.state.data, updatedData))
   };
 
-  handleResetDescription(description, index, descIndex) {
-    const { data } = this.state;
-    this.setState({
-      data: Object.assign(data, {
-        [`description-${index}`]: undefined,
-        [`description-${index}-${descIndex}`]: description
-      })
-    })
+  function handleResetDescription(description, index, descIndex) {
+    setData(Object.assign(data, {
+      [`description-${index}`]: undefined,
+      [`description-${index}-${descIndex}`]: description
+    }))
   };
 
-  exportData() {
-    const { data } = this.state;
-    const filteredData = {};
-    Object.keys(data).forEach((key) => {
-      if (data[key]) {
-        filteredData[key] = data[key]
-      }
-    })
-
-    const json = JSON.stringify(filteredData);
-    console.log(json)
-  }
-
-  render() {
-    const { sections, data } = this.state;
-    return (
-      <ThemeProvider theme={theme}>
-        <PersonalInfo
-          sectionSet={sections.personal}
-          handleChange={this.handleInputChange}
-          handleSubmit={this.handleSubmitSection}
-          editSection={this.handleEditSection}
-          resetSection={this.handleSectionReset}
-          sectionData={data}
-        />
-        <hr />
-        <EducationExperience
-          sectionSet={sections.education}
-          addSubSection={this.addSubSection}
-          removeSubSection={this.removeSubSection}
-          handleChange={this.handleInputChange}
-          handleSubmit={this.handleSubmitSection}
-          editSection={this.handleEditSection}
-          resetSection={this.handleSectionReset}
-          sectionData={data}
-        />
-        <hr />
-        <PracticalExperience
-          sectionSet={sections.practical}
-          addSubSection={this.addSubSection}
-          removeSubSection={this.removeSubSection}
-          handleChange={this.handleInputChange}
-          handleSubmit={this.handleSubmitSection}
-          editSection={this.handleEditSection}
-          resetSection={this.handleSectionReset}
-          resetDescription={this.handleResetDescription}
-          sectionData={data}
-        />
-
-        <hr/>
-        <Button variant="contained" onClick={this.exportData}>Export as JSON</Button>
-        <Button onClick={this.handleFullReset}>Reset all</Button>        
-      </ThemeProvider>
-    );
-  }
-};
-
+  return (
+    <ThemeProvider theme={theme}>
+      <PersonalInfo
+        sectionSet={sections.personal}
+        handleChange={handleInputChange}
+        handleSubmit={handleSubmitSection}
+        editSection={handleEditSection}
+        resetSection={handleSectionReset}
+        sectionData={data}
+      />
+      <hr />
+      <EducationExperience
+        sectionSet={sections.education}
+        addSubSection={addSubSection}
+        removeSubSection={removeSubSection}
+        handleChange={handleInputChange}
+        handleSubmit={handleSubmitSection}
+        editSection={handleEditSection}
+        resetSection={handleSectionReset}
+        sectionData={data}
+      />
+      <hr />
+      <PracticalExperience
+        sectionSet={sections.practical}
+        addSubSection={addSubSection}
+        removeSubSection={removeSubSection}
+        handleChange={handleInputChange}
+        handleSubmit={handleSubmitSection}
+        editSection={handleEditSection}
+        resetSection={handleSectionReset}
+        resetDescription={handleResetDescription}
+        sectionData={data}
+      />
+      <hr/>
+      <Button onClick={handleFullReset}>Reset all</Button>        
+    </ThemeProvider>
+  );
+}
 export default App;
